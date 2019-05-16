@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+
+   <head>
+      <title>URL Shortener</title>
+      <link rel="shortcut icon" href="https://cdn.hyperdev.com/us-east-1%3A52a203ff-088b-420f-81be-45bf559d01b1%2Ffavicon.ico" type="image/x-icon"/>
+      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+      <link href="/public/style.css" rel="stylesheet" type="text/css">
+      <script type="text/javascript">
+      
+        function onSubmit(url){
+          fetch(window.location + "api/shorturl/new", {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              url: url,
+            })
+          })
+          .then(
+            (response)=>response.json()
+          )
+          .then((data)=>{
+            if(data.error){
+              document.getElementById("result").innerHTML = data.error;
+            }
+            else{
+              document.getElementById("result").innerHTML = 
+              `
+              The shorten url is:
+              <a href='${window.location}api/shorturl/${data.short_url}'>
+                ${window.location}api/shorturl/${data.short_url}
+              </a>
+              `
+            }
+            
+          })
+        }
+     
+      </script>
+   </head>
+
+   <body>
+      <div class="container">
+        <h2>API Project: URL Shortener Microservice</h2>
+        <div>
+          <p>
+            This example works with an express.js API and mongoDB database.
+          </p>
+          <p>
+            Current html static page uses fetch api to asynchronously consume the microservice.
+          </p>
+        </div>
+        <h3>Short URL Creation </h3>
+        <p>
+          This page makes a POST request to: <code>/api/shorturl/new</code> with a key with name "url".
+        </p>
+        <label for="url_input">URL to be shortened: </label>
+        <input id="url_input" type="text" name="url" value="https://google.es">
+        <button onclick="onSubmit(document.getElementById('url_input').value)">Shorten url</button>
+
+        <div id="result">          
+          
+        </div>
+      </div>
+   </body>
+
+
+</html>
